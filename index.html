@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>GG replays analyser</title>
+        <script src="./js/index.js" defer></script>
+        <script src="./js/dist/papaparse.min.js" defer></script>
+
+        <script src="https://cdn.plot.ly/plotly-2.4.2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"
+            integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="./css/index.css">
+    </head>
+
+    <form>
+        <section id="form" class="form" onsubmit="applySelectedFloors(event)">
+            <h1 class="title">Select the floors you would like to include games from</h1>
+            <section class="horizontalContainer">
+                <section class="checkbox-container">
+                    <label for="floor1"> Floor 1</label>
+                    <input id="floor1" type="checkbox" class="checkbox">
+                </section>
+                <section class="checkbox-container">
+                    <label for="floor2"> Floor 2</label>
+                    <input id="floor2" type="checkbox" class="checkbox">
+                </section>
+                <section class="checkbox-container">
+                    <label for="floor3"> Floor 3</label>
+                    <input id="floor3" type="checkbox" class="checkbox">
+                </section>
+                <section class="checkbox-container">
+                    <label for="floor4"> Floor 4</label>
+                    <input id="floor4" type="checkbox" class="checkbox">
+                </section>
+                <section class="checkbox-container">
+                    <label for="floor5"> Floor 5</label>
+                    <input id="floor5" type="checkbox" class="checkbox">
+                </section>
+                <section class="checkbox-container">
+                    <label for="floor6"> Floor 6</label>
+                    <input id="floor6" type="checkbox" class="checkbox">
+                </section>
+                <section class="checkbox-container">
+                    <label for="floor7"> Floor 7</label>
+                    <input id="floor7" type="checkbox" class="checkbox">
+                </section>
+                <section class="checkbox-container">
+                    <label for="floor8"> Floor 8</label>
+                    <input id="floor8" type="checkbox" class="checkbox">
+                </section>
+                <section class="checkbox-container">
+                    <label for="floor9"> Floor 9</label>
+                    <input id="floor9" type="checkbox" class="checkbox">
+                </section>
+                <section class="checkbox-container">
+                    <label for="floor10"> Floor 10</label>
+                    <input id="floor10" type="checkbox" class="checkbox">
+                </section>
+                <section class="checkbox-container">
+                    <label for="floor99"> Floor 99 (Celestial)</label>
+                    <input id="floor99" type="checkbox" class="checkbox">
+                </section>
+            </section>
+
+            <button class="btn" type="submit" onclick="applySelectedFloors(event)">Apply</button>
+            <section class="fineprint" id="fineprint"> This is the fine print</section>
+        </section>
+    </form>
+
+    <body class="verticalContainer">
+        <section class="horizontalContainer">
+            <section class="chart-container">
+                <section id="charUsagePie" class="chart"></section>
+            </section>
+            <section class="chart-container">
+                <section id="charWinrateBar" class="chart"></section>
+            </section>
+        </section>
+
+
+
+    </body>
+
+
+</html>
