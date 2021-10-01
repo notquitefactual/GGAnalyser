@@ -52,7 +52,7 @@ function processStats(matchesArr, ranks) {
     let maxDate = rankFilteredGames.reduce((a, b) => { return a > b ? a : b });
     let minDate = rankFilteredGames.reduce((a, b) => { return a < b ? a : b });
     
-    const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
+    const dateOptions = { month: 'short', day: 'numeric' };
     maxDate = new Date(maxDate[0]).toLocaleDateString("en-US", dateOptions);
     minDate = new Date(minDate[0]).toLocaleDateString("en-US", dateOptions);
     console.log(maxDate, minDate)
