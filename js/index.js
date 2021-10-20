@@ -30,7 +30,7 @@ window.onload = function () {
     document.getElementById('floor99').checked = true;
 
 
-    const csvString = 'https://raw.githubusercontent.com/notquitefactual/totsugeki/dev/GGST_Replays.csv'
+    const csvString = 'https://gist.githubusercontent.com/notquitefactual/3c6a1d310025803d5ccdc2786e60ede8/raw'
     const papaConfig = {
         download: true,
         dynamicTyping: true,
@@ -48,10 +48,11 @@ window.onload = function () {
 function processStats(matchesArr, ranks) {
     const rankFilter = makeRankFilter(ranks);
     rankFilteredGames = matchesArr.filter(rankFilter);
+    console.log("Head:", matchesArr.slice(0, 10));
     const fineprint = document.getElementById('fineprint')
     let maxDate = rankFilteredGames.reduce((a, b) => { return a > b ? a : b });
     let minDate = rankFilteredGames.reduce((a, b) => { return a < b ? a : b });
-    
+
     const dateOptions = { month: 'short', day: 'numeric' };
     maxDate = new Date(maxDate[0]).toLocaleDateString("en-US", dateOptions);
     minDate = new Date(minDate[0]).toLocaleDateString("en-US", dateOptions);
@@ -63,6 +64,7 @@ function processStats(matchesArr, ranks) {
     const values = getCharacterPlayAndWinRates(rankFilteredGames);
     const characterPlayRates = values.playRateArray;
     const characterWinRates = values.winRateArray;
+    const matchupTable = values.matchupTable;
 
     const config = { responsive: true }
     const pieData = [{
@@ -104,27 +106,92 @@ function processStats(matchesArr, ranks) {
     };
     Plotly.newPlot('charWinrateBar', barData, barLayout, config);
 
+    const piYG = [
+        [0, '#d01c8b'],
+        [0.25, '#f1b6da'],
+        [0.5, '#ffffff'],
+        [0.75, '#b8e186'],
+        [1, '#4dac26']
+    ];
+
+    const heatmapLayout = {
+        title: 'Matchup Table (read left to right)',
+        width: parent_width,
+        height: parent_height,
+        annotations: [],
+    };
+
+    for (var i = 0; i < readable_character_names.length; i++) {
+        for (var j = 0; j < readable_character_names.length; j++) {
+            var currentValue = matchupTable[i][j];
+            if (currentValue >= 0.8 || currentValue <= 0.2) {
+                var textColor = 'white';
+            } else {
+                var textColor = 'black';
+            }
+            var result = {
+                xref: 'x1',
+                yref: 'y1',
+                x: readable_character_names[j],
+                y: readable_character_names[i],
+                text: Math.round(matchupTable[i][j]*10),
+                font: {
+                    family: 'Arial',
+                    size: 12,
+                    color: 'rgb(50, 171, 96)'
+                },
+                showarrow: false,
+                font: {
+                    color: textColor
+                }
+            };
+            heatmapLayout.annotations.push(result);
+        }
+    }
+
+    const heatmapData = [
+        {
+            z: matchupTable,
+            x: readable_character_names,
+            y: readable_character_names,
+
+            colorscale: piYG,
+            type: 'heatmap'
+        }
+    ];
+
+    Plotly.newPlot('heatmapChart', heatmapData, heatmapLayout);
+
 }
 
 function getCharacterPlayAndWinRates(matchesArr) {
     let playRateArray = [];
     let winRateArray = [];
     let characterFilteredGamesArray = [];
-
+    const matchupTable = []
     for (let charCode = 0; charCode < 17; charCode++) {
         const characterFilter = makeCharacterFilter(charCode);
         const characterFilteredGames = matchesArr.filter(characterFilter);
         const characterPlayRate = characterFilteredGames.length;
         const characterWinRate = getCharacterWinRate(characterFilteredGames, charCode);
-        characterFilteredGamesArray.push(characterFilteredGames)
-        playRateArray.push(characterPlayRate)
-        winRateArray.push(characterWinRate)
+        characterFilteredGamesArray.push(characterFilteredGames);
+        playRateArray.push(characterPlayRate);
+        winRateArray.push(characterWinRate);
+        const matchupWinrates = []
+        for (let i = 0; i < 17; i++) {
+            const matchupCharacterFilter = i === charCode ? makeMirrorMatchFilter(charCode) : makeCharacterFilter(i);
+            const matchupFilteredGames = characterFilteredGames.filter(matchupCharacterFilter);
+
+            const matchupWinRate = getCharacterWinRate(matchupFilteredGames, charCode);
+            matchupWinrates.push(matchupWinRate)
+        }
+        matchupTable.push(matchupWinrates);
     }
 
     const average = (array) => array.reduce((a, b) => a + b) / array.length;
     console.log('WINRATE MEAN', average(winRateArray));
 
-    return { playRateArray, winRateArray };
+    return { playRateArray, winRateArray, matchupTable };
 }
 
 function getCharacterWinRate(characterFilteredGames, charCode) {
@@ -143,27 +210,18 @@ function makeRankFilter(ranks) {
 }
 
 function makeCharacterFilter(charCode) {
-    return (currentValue) => currentValue.slice(2, 4).includes(charCode);
+    return (currentValue) => currentValue.slice(-2).includes(charCode);
 }
 
 function makeCharacterWinFilter(charCode) {
-    // return (currentValue) => currentValue[5] == charCode;
-    return (currentValue) => {
-        const winner = currentValue[4];
-        const winnerCode = winner == 1 ? currentValue[2] : currentValue[3];
-        return winnerCode == charCode
-    };
+    return (currentValue) => currentValue[5] == charCode;
 }
 function makeCharacterLossFilter(charCode) {
-    return (currentValue) => {
-        const winner = currentValue[4];
-        const loserCode = winner == 1 ? currentValue[3] : currentValue[2];
-        return loserCode == charCode
-    };
+    return (currentValue) => currentValue[6] == charCode;
 }
 
 function makeMirrorMatchFilter(charCode) {
-    return (currentValue) => currentValue[2] == charCode && currentValue[3] == charCode;
+    return (currentValue) => currentValue[3] == charCode && currentValue[4] == charCode;
 }
 
 function getSelectedFloors() {

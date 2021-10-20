@@ -28,6 +28,12 @@
 	flex: 1;
 }
 
+.wide-chart-container {
+	height: 50vh;
+	width: 90vw;
+	flex: 1;
+}
+
 .form {
 	display: flex;
 	flex-direction: column;
