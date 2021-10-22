@@ -24,25 +24,46 @@ var rankFilteredGames = null;
 var charUsagePieChart = null;
 var charWinrateChart = null;
 
-window.onload = function () {
+
+
+window.onload = async function () {
+    Papa.parsePromise = function (file, config) {
+        return new Promise(function (complete, error) {
+            Papa.parse(file, config);
+        });
+    };
     const form = document.getElementById('form');
     form.addEventListener("submit", applySelectedFloors);
     document.getElementById('floor99').checked = true;
 
-
-    const csvString = 'https://gist.githubusercontent.com/notquitefactual/3c6a1d310025803d5ccdc2786e60ede8/raw'
+    let gistRevisions = await fetch('https://api.github.com/gists/3c6a1d310025803d5ccdc2786e60ede8/commits');
+    gistRevisions = (await gistRevisions.json()).map((x) => x.url);
+    const numRevisions = 3;
+    let globalMatchesArr = [];
     const papaConfig = {
         download: true,
         dynamicTyping: true,
         complete: function (results) {
-            globalMatchesArr = results.data;
-            globalMatchesArr.shift()
-            console.log("Dataset contains", globalMatchesArr.length, "samples");
-            processStats(globalMatchesArr, getSelectedFloors())
+            csvdata = results.data;
+            csvdata.shift();
+            // console.log(csvdata);
+            globalMatchesArr = globalMatchesArr.concat(csvdata);
+            lock += 1;
+            if (lock >= numRevisions) {
+                console.log("Dataset contains", globalMatchesArr.length, "samples");
+                processStats(globalMatchesArr, getSelectedFloors())
+            }
         }
     };
 
-    Papa.parse(csvString, papaConfig);
+    let lock = 0;
+    for (let i = 0; i < numRevisions; i++) {
+        const gist = await fetch(gistRevisions[i]);
+        const gistBody = await (gist.json())
+        const csvString = gistBody.files["GGST_replays.csv"].raw_url;
+        Papa.parsePromise(csvString, papaConfig)
+    }
+
 };
 
 function processStats(matchesArr, ranks) {
@@ -67,7 +88,10 @@ function processStats(matchesArr, ranks) {
     const values = getCharacterPlayAndWinRates(rankFilteredGames);
     const characterPlayRates = values.playRateArray;
     const characterWinRates = values.winRateArray;
+    const characterWinRateErrors = values.winrateErrorsArray;
     const matchupTable = values.matchupTable;
+    const matchupCounts = values.matchupTableCounts;
+    const matchupCertainties = values.matchupTableCertainties;
 
     const config = { responsive: true }
     const pieData = [{
@@ -99,7 +123,12 @@ function processStats(matchesArr, ranks) {
             type: 'sort',
             target: 'x',
             order: 'ascending'
-        }]
+        }],
+        error_x: {
+            type: 'data',
+            array: characterWinRateErrors,
+            visible: true
+        },
     }];
     const barLayout = {
         title: 'Character Winrates',
@@ -123,8 +152,9 @@ function processStats(matchesArr, ranks) {
         height: parent_height,
         annotations: [],
     };
-
+    const hoverText = []
     for (var i = 0; i < readable_character_names.length; i++) {
+        const temp = [];
         for (var j = 0; j < readable_character_names.length; j++) {
             var currentValue = matchupTable[i][j];
             if (currentValue >= 0.8 || currentValue <= 0.2) {
@@ -137,8 +167,11 @@ function processStats(matchesArr, ranks) {
                 yref: 'y1',
                 x: readable_character_names[j],
                 y: readable_character_names[i],
-                
-                text: Math.round(matchupTable[i][j]*10),
+                confidence: matchupCertainties[i][j].toFixed(2),
+                winrate: matchupTable[i][j].toFixed(4),
+                gamecount: matchupCounts[i][j],
+
+                text: Math.round(matchupTable[i][j] * 10),
                 font: {
                     family: 'Arial',
                     size: 12,
@@ -150,15 +183,18 @@ function processStats(matchesArr, ranks) {
                 }
             };
             heatmapLayout.annotations.push(result);
+            temp.push(`${result.y} vs ${result.x} = ${result.winrate} ± ${result.confidence}<br>with 95% confidence<br>based on ${result.gamecount} games</br></br>`)
         }
+        hoverText.push(temp)
     }
-
     const heatmapData = [
         {
             z: matchupTable,
             x: readable_character_names,
             y: readable_character_names,
-
+            text: hoverText,
+            hoverinfo: 'text',
+            // hovertemplate: '%{y} vs %{x} = %{z:0.4f} with confidence %{t:0.4f}',
             colorscale: piYG,
             type: 'heatmap'
         }
@@ -171,31 +207,46 @@ function processStats(matchesArr, ranks) {
 function getCharacterPlayAndWinRates(matchesArr) {
     let playRateArray = [];
     let winRateArray = [];
+    let winrateErrorsArray = []
     let characterFilteredGamesArray = [];
     const matchupTable = []
+    const matchupTableCounts = []
+    const matchupTableCertainties = []
     for (let charCode = 0; charCode < 17; charCode++) {
         const characterFilter = makeCharacterFilter(charCode);
         const characterFilteredGames = matchesArr.filter(characterFilter);
         const characterPlayRate = characterFilteredGames.length;
         const characterWinRate = getCharacterWinRate(characterFilteredGames, charCode);
+        const characterWinRateError = 2.58 * Math.sqrt((characterPlayRate / characterPlayRate * (1 - characterWinRate / characterPlayRate)) / characterFilteredGames.length)
         characterFilteredGamesArray.push(characterFilteredGames);
         playRateArray.push(characterPlayRate);
         winRateArray.push(characterWinRate);
+        winrateErrorsArray.push(characterWinRateError)
         const matchupWinrates = []
+        const matchupCounts = []
+        const matchupCertainties = []
         for (let i = 0; i < 17; i++) {
             const matchupCharacterFilter = i === charCode ? makeMirrorMatchFilter(charCode) : makeCharacterFilter(i);
             const matchupFilteredGames = characterFilteredGames.filter(matchupCharacterFilter);
 
             const matchupWinRate = getCharacterWinRate(matchupFilteredGames, charCode);
-            matchupWinrates.push(matchupWinRate)
+            const confidence = 2.58 * Math.sqrt((matchupWinRate * (1 - matchupWinRate)) / matchupFilteredGames.length)
+            // console.log(readable_character_names[charCode], 'vs', readable_character_names[i], matchupWinRate, 'with confidence:', confidence, 'based on', matchupFilteredGames.length, 'games')
+            matchupWinrates.push(matchupWinRate);
+            matchupCounts.push(matchupFilteredGames.length)
+            matchupCertainties.push(confidence);
+
         }
         matchupTable.push(matchupWinrates);
+        matchupTableCounts.push(matchupCounts);
+        matchupTableCertainties.push(matchupCertainties)
     }
 
     const average = (array) => array.reduce((a, b) => a + b) / array.length;
     console.log('WINRATE MEAN', average(winRateArray));
+    console.log('CONFIDENCE MEAN', average(matchupTableCertainties.map((x) => average(x))));
 
-    return { playRateArray, winRateArray, matchupTable };
+    return { playRateArray, winRateArray, matchupTable, matchupTableCounts, matchupTableCertainties, winrateErrorsArray };
 }
 
 function getCharacterWinRate(characterFilteredGames, charCode) {
