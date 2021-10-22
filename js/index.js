@@ -25,7 +25,6 @@ var charUsagePieChart = null;
 var charWinrateChart = null;
 
 
-
 window.onload = async function () {
     Papa.parsePromise = function (file, config) {
         return new Promise(function (complete, error) {
@@ -39,7 +38,7 @@ window.onload = async function () {
     let gistRevisions = await fetch('https://api.github.com/gists/3c6a1d310025803d5ccdc2786e60ede8/commits');
     gistRevisions = (await gistRevisions.json()).map((x) => x.url);
     const numRevisions = 3;
-    let globalMatchesArr = [];
+    globalMatchesArr = [];
     const papaConfig = {
         download: true,
         dynamicTyping: true,
