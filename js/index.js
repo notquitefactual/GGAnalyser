@@ -48,8 +48,11 @@ window.onload = function () {
 function processStats(matchesArr, ranks) {
     const rankFilter = makeRankFilter(ranks);
     rankFilteredGames = matchesArr.filter(rankFilter);
-    console.log("Head:", matchesArr.slice(0, 10));
-    const fineprint = document.getElementById('fineprint')
+    console.log("Head:", rankFilteredGames.slice(0, 10));
+    const fineprint = document.getElementById('fineprint');
+    if (rankFilteredGames.length <= 0) {
+        alert("Looks like we don't have any data for that selection.\nSorry :(")
+    }
     let maxDate = rankFilteredGames.reduce((a, b) => { return a > b ? a : b });
     let minDate = rankFilteredGames.reduce((a, b) => { return a < b ? a : b });
 
@@ -115,7 +118,7 @@ function processStats(matchesArr, ranks) {
     ];
 
     const heatmapLayout = {
-        title: 'Matchup Table (read left to right)',
+        title: 'Matchup Table (read left to right) <br>(this is still a WIP pls report any inconsistencies to my reddit account <a href="https://www.reddit.com/message/compose/?to=NotQuiteFactual">/u/notquitefactual</a>)</br>',
         width: parent_width,
         height: parent_height,
         annotations: [],
@@ -134,6 +137,7 @@ function processStats(matchesArr, ranks) {
                 yref: 'y1',
                 x: readable_character_names[j],
                 y: readable_character_names[i],
+                
                 text: Math.round(matchupTable[i][j]*10),
                 font: {
                     family: 'Arial',
