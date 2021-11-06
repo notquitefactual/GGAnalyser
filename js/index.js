@@ -7,7 +7,7 @@ window.onload = async function () {
     form.addEventListener("submit", applySelectedFloors);
     document.getElementById('floor99').checked = true;
 
-    const response = await fetch('https://gist.githubusercontent.com/notquitefactual/2504eb3283723554243c8b3859cf01b2/raw/GGST_STATS.json');
+    const response = await fetch('https://gist.githubusercontent.com/notquitefactual/3c6a1d310025803d5ccdc2786e60ede8/raw/GGST_STATS.json');
     floorStats = await response.json()
     console.log(floorStats[99])
     processStats(99)

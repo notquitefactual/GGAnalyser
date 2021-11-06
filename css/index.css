@@ -40,14 +40,14 @@
 	justify-content: left;
 }
 
-.asdf-container {
+.radio-container {
 	display: flex;
 	flex-direction: row;
 	margin-right: 1em;
 	font: 1.5rem sans-serif;
 }
 
-.asdf {
+.radio {
 	align-self: end;
 	height: 1.5rem;
 	width: 1.5rem;
@@ -118,13 +118,13 @@
 	box-sizing: border-box;
 }
 
-.asdf {
+.radio {
 	display: inline-block;
 	padding: 10px 20px;
 	transform: translateZ(0);
 }
 
-.asdf input[type=asdf] {
+.radio input[type=radio] {
 	opacity: 0;
 	position: absolute;
 	margin: 0;
@@ -136,13 +136,13 @@
 	pointer-events: none;
 }
 
-.asdf .asdf-material {
+.radio .radio-material {
 	vertical-align: middle;
 	position: relative;
 	top: 3px;
 }
 
-.asdf .asdf-material:before {
+.radio .radio-material:before {
 	position: absolute;
 	left: 8px;
 	top: 2px;
@@ -156,7 +156,7 @@
 	margin: 0;
 }
 
-.asdf .asdf-material .check {
+.radio .radio-material .check {
 	position: relative;
 	display: inline-block;
 	width: 20px;
@@ -167,7 +167,7 @@
 	z-index: 1;
 }
 
-.asdf .asdf-material .check:before {
+.radio .radio-material .check:before {
 	position: absolute;
 	content: "";
 	transform: rotate(45deg);
@@ -177,44 +177,44 @@
 	width: 0;
 	height: 0;
 	box-shadow: 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0 inset;
-	animation: asdf-off 0.3s forwards ease-out;
+	animation: radio-off 0.3s forwards ease-out;
 }
 
-.asdf input[type=asdf]:focus+.asdf-material .check:after {
+.radio input[type=radio]:focus+.radio-material .check:after {
 	opacity: 0.2;
 }
 
-.asdf input[type=asdf]:checked+.asdf-material .check:before {
+.radio input[type=radio]:checked+.radio-material .check:before {
 	box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px;
-	animation: asdf-on 0.3s forwards ease-out;
+	animation: radio-on 0.3s forwards ease-out;
 }
 
-.asdf input[type=asdf]:not(:checked)+.asdf-material:before {
+.radio input[type=radio]:not(:checked)+.radio-material:before {
 	animation: rippleOff 700ms forwards ease-out;
 }
 
-.asdf input[type=asdf]:checked+.asdf-material:before {
+.radio input[type=radio]:checked+.radio-material:before {
 	animation: rippleOn 700ms forwards ease-out;
 }
 
-.asdf input[type=asdf]:not(:checked)+.asdf-material .check:after {
+.radio input[type=radio]:not(:checked)+.radio-material .check:after {
 	animation: rippleOff 700ms forwards ease-out;
 }
 
-.asdf input[type=asdf]:checked+.asdf-material .check:after {
+.radio input[type=radio]:checked+.radio-material .check:after {
 	animation: rippleOn 700ms forwards ease-out;
 }
 
-.asdf input[type=asdf][disabled]:not(:checked)~.asdf-material .check:before, .asdf input[type=asdf][disabled]+.circle {
+.radio input[type=radio][disabled]:not(:checked)~.radio-material .check:before, .radio input[type=radio][disabled]+.circle {
 	opacity: 0.5;
 }
 
-.asdf input[type=asdf][disabled]+.asdf-material .check:after {
+.radio input[type=radio][disabled]+.radio-material .check:after {
 	background-color: rgba(0, 0, 0, 0.84);
 	transform: rotate(-45deg);
 }
 
-@keyframes asdf-on {
+@keyframes radio-on {
 	0% {
 		box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 15px 2px 0 11px;
 	}
@@ -226,7 +226,7 @@
 	}
 }
 
-@keyframes asdf-off {
+@keyframes radio-off {
 	0% {
 		box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0px 0 20px, 0px 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px, 0 0 0 0 inset;
 	}
