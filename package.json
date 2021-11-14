@@ -1,0 +1,20 @@
+{
+  "name": "project_asuka",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/core": "^3.5.1",
+    "axios": "^0.23.0",
+    "csv-parse": "^4.16.3",
+    "node-fetch": "^3.0.0",
+    "qs": "^6.10.1",
+    "yargs": "^17.2.1"
+  }
+}
