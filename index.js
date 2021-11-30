@@ -72,10 +72,9 @@ const requestData = [
 	// Offset 0x00000000 to 0x00000057
 	0x92, 0x95, 0xB2, 0x32, 0x31, 0x31, 0x30, 0x32, 0x37, 0x31, 0x31, 0x33,
 	0x31, 0x32, 0x33, 0x30, 0x30, 0x38, 0x33, 0x38, 0x34, 0xAD, 0x36, 0x31,
-	0x36, 0x39, 0x34, 0x62, 0x33, 0x65, 0x39, 0x32, 0x35, 0x32, 0x38, 0x02,
-	0xA5, 0x30, 0x2E, 0x30, 0x2E, 0x37, 0x03, 0x94, 0x01, 0xCC, 0x02, 0x0A, 0x9A,
+	0x61, 0x35, 0x65, 0x64, 0x34, 0x66, 0x34, 0x36, 0x31, 0x63, 0x32, 0x02,
+	0xA5, 0x30, 0x2E, 0x30, 0x2E, 0x38, 0x03, 0x94, 0x01, 0xCC, 0x00, 0x0A, 0x9A,
 	0xFF, 0x00, 0x01, 0x63, 0x90, 0xFF, 0xFF, 0x00, 0x00, 0x01
-
 ];
 
 // requestData[pageIndex-1] = 1;
@@ -129,7 +128,7 @@ const fetchData = async () => {
 				})
 			}));
 			const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-			await delay(100)
+			await delay(35)
 		} catch (error) {
 			console.log(error);
 		}
@@ -151,8 +150,10 @@ const parsePlayerData = (playerData) => {
 	const [floor, playerACharCode, playerBCharCode] = [...Buffer.from(playerData[0].slice(-3))]
 	const playerAID = playerData[1];
 	const playerBID = playerData[5];
+	const playerAOnlineID = playerData[4].slice(0, 15);
+	const playerBOnlineID = playerData[8].slice(0, 15);
 	const playerAName = playerData[2];
-	const playerBName = playerData[5].slice(0, playerData[5].length - 2);
+	const playerBName = playerData[6];
 	const time = playerData[9].slice(0, playerData[9].length - 4)
 	const winner = Buffer.from(playerData[8][playerData[8].length - 1]).slice(-1)[0]
 	const winnerCharCode = winner === 1 ? playerACharCode : playerBCharCode;
@@ -164,6 +165,8 @@ const parsePlayerData = (playerData) => {
 		winner,
 		playerAID,
 		playerBID,
+		playerAOnlineID,
+		playerBOnlineID,
 		playerAName,
 		playerBName,
 		playerACharCode,
@@ -174,8 +177,7 @@ const parsePlayerData = (playerData) => {
 	return gameObject;
 }
 fetchData().then(async (data) => {
-	const sectionSep = /(?<!�)���(?!�)/;
-	const gameSep = /��\u0002��/;
+	const gameSep = /\uFFFD\uFFFD\u0002\uFFFD/;
 	let processedData = []
 	for (let page = 0; page < data.length; page++) {
 		const sections = data[page].split(gameSep);

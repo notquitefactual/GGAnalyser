@@ -1,0 +1,310 @@
+{
+	"info": {
+		"_postman_id": "f508be69-943e-4220-ad5c-1b2595f92624",
+		"name": "GGST",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "replays",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"user-agent": true,
+					"connection": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Steam",
+						"type": "text"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "data",
+							"value": "9295b2323131303237313133313233303038333834ad3631613565643466343631633202a5302e302e38039401630a9aff0001cc6990ffff000001",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ggst-game.guiltygear.com/api/catalog/get_replay",
+					"protocol": "https",
+					"host": [
+						"ggst-game",
+						"guiltygear",
+						"com"
+					],
+					"path": [
+						"api",
+						"catalog",
+						"get_replay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "gist history",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.github.com/gists/3c6a1d310025803d5ccdc2786e60ede8",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"3c6a1d310025803d5ccdc2786e60ede8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ranking vip",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "data",
+							"value": "9295b2323131303237313133313233303038333834ad3631393064343538333566616602a5302e302e3803940000ff00",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ggst-game.guiltygear.com/api/ranking/vip",
+					"protocol": "https",
+					"host": [
+						"ggst-game",
+						"guiltygear",
+						"com"
+					],
+					"path": [
+						"api",
+						"ranking",
+						"vip"
+					],
+					"query": [
+						{
+							"key": "data",
+							"value": "9295b2323130363131313234363234373230333936ad3631393064343538333566616602a5302e302e3703940000ff00",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ranking total wins",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "data",
+							"value": "9295B2323131303237313133313233303038333834AD3631396533373339646532623602A5302E302E380394CC0000FF00",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ggst-game.guiltygear.com/api/ranking/total_wins",
+					"protocol": "https",
+					"host": [
+						"ggst-game",
+						"guiltygear",
+						"com"
+					],
+					"path": [
+						"api",
+						"ranking",
+						"total_wins"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "charofflineStats",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "data",
+							"value": "9295b2323130363131313234363234373230333936ad3631393064363236383739373702a5302e302e380396b232313036313130373437353539323631323706ff01ffff",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ggst-game.guiltygear.com/api/statistics/get",
+					"protocol": "https",
+					"host": [
+						"ggst-game",
+						"guiltygear",
+						"com"
+					],
+					"path": [
+						"api",
+						"statistics",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "onlineRecord",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "data",
+							"value": "9295b2323130363131313234363234373230333936ad3631393064363236383739373702a5302e302e380396b2323130363131313234363234373230333936070101ffffff",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ggst-game.guiltygear.com/api/statistics/get",
+					"protocol": "https",
+					"host": [
+						"ggst-game",
+						"guiltygear",
+						"com"
+					],
+					"path": [
+						"api",
+						"statistics",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "onlineRecordAsAllCharsAgainstAllCharsByChar",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "data",
+							"value": "9295b2323130363131313234363234373230333936ad3631393064363236383739373702a5302e302e380396b23231303631313132343632343732303339360101fffeff",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ggst-game.guiltygear.com/api/statistics/get",
+					"protocol": "https",
+					"host": [
+						"ggst-game",
+						"guiltygear",
+						"com"
+					],
+					"path": [
+						"api",
+						"statistics",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "onlineRecordAsAllCharsAgainstAllChars",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "data",
+							"value": "9295b2323131303237313133313233303038333834ad3631393064363236383739373702a5302e302e380396b232313036313131323436323437323033393601010bfeff",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ggst-game.guiltygear.com/api/statistics/get",
+					"protocol": "https",
+					"host": [
+						"ggst-game",
+						"guiltygear",
+						"com"
+					],
+					"path": [
+						"api",
+						"statistics",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "data",
+							"value": "9295a0a002a5302e302e38039501b13736353631313939323137323935303839af313130303030313461656362656632cd0100a0",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ggst-game.guiltygear.com/api/user/login",
+					"protocol": "https",
+					"host": [
+						"ggst-game",
+						"guiltygear",
+						"com"
+					],
+					"path": [
+						"api",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

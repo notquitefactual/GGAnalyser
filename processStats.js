@@ -103,14 +103,22 @@ async function getAllStats(filename) {
     for (let i = 0; i < numRevisions; i++) {
         console.log('Fetching revison', i + 1, 'of', numRevisions);
         const gist = await axios.get(gistRevisions[i]);
-        const gistBody = gist.data
+        const gistBody = gist.data;
         const gistFile = await axios.get(gistBody.files["GGST_replays.csv"].raw_url);
         const fileText = await gistFile.data;
         const records = parse(fileText, {
             columns: true,
             skip_empty_lines: true
         })
-        combinedRecords = combinedRecords.concat(records);
+
+        if (gistBody.history[i].committed_at > '2021-11-30')
+        {
+            combinedRecords = combinedRecords.concat(records);
+        }
+        else {
+            console.log('old patch')
+        }
+        
     }
 
 
@@ -124,12 +132,6 @@ async function getAllStats(filename) {
     const floorStats = {}
     for (let i = 1; i < 12; i++) {
         i = i === 11 ? 99 : i;
-        console.log('Calculating stats for floor', i);
-        console.log('Memory usage for floor');
-        const used = process.memoryUsage();
-        for (let key in used) {
-            console.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
-        }
         try {
             floorStats[i] = processStats(combinedRecords, [i.toString()])
         } catch (error) {
