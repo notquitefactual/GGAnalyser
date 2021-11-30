@@ -23,7 +23,7 @@ function getCharacterPlayAndWinRates(matchesArr) {
     const matchupTable = []
     const matchupTableCounts = []
     const matchupTableCertainties = []
-    for (let charCode = 0; charCode < 17; charCode++) {
+    for (let charCode = 0; charCode < 18; charCode++) {
         const characterFilter = makeCharacterFilter(charCode);
         const characterFilteredGames = matchesArr.filter(characterFilter);
         const characterPlayRate = characterFilteredGames.length;
@@ -36,7 +36,7 @@ function getCharacterPlayAndWinRates(matchesArr) {
         const matchupWinrates = []
         const matchupCounts = []
         const matchupCertainties = []
-        for (let i = 0; i < 17; i++) {
+        for (let i = 0; i < 18; i++) {
             const matchupCharacterFilter = i === charCode ? makeMirrorMatchFilter(charCode) : makeCharacterFilter(i);
             const matchupFilteredGames = characterFilteredGames.filter(matchupCharacterFilter);
 
