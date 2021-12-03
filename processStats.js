@@ -1,6 +1,7 @@
 const fs = require('fs');
 const parse = require('csv-parse/lib/sync');
 const { default: axios } = require('axios');
+const GIST_ID = process.env.GIST_ID;
 
 function processStats(matchesArr, ranks) {
     const rankFilter = makeRankFilter(ranks);
@@ -97,7 +98,8 @@ async function getAllStats(filename) {
         filename = 'GGST_REPLAYS_' + new Date().toJSON().slice(0, 10) + '.csv'
     }
     let combinedRecords = []
-    let gistRevisions = await axios.get('https://api.github.com/gists/3c6a1d310025803d5ccdc2786e60ede8/commits');
+    let gistRevisions = await axios.get(`https://api.github.com/gists/${GIST_ID}/commits`);
+    console.log(gistRevisions);
     gistRevisions = gistRevisions.data.map((x) => x.url);
     const numRevisions = 3;
     for (let i = 0; i < numRevisions; i++) {

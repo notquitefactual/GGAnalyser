@@ -25,11 +25,10 @@ const argv = yargs
 	.alias('help', 'h')
 	.argv;
 
-let totalPages = 5;
+let totalPages = 101;
 if (argv.pagecount) {
 	totalPages = argv.pagecount;
 }
-const recordsPerPage = 10;
 
 function toHexString(byteArray) {
 	return Array.from(byteArray, function (byte) {
@@ -40,7 +39,7 @@ function toHexString(byteArray) {
 // Convert a hex string to a byte array
 function hexToBytes(hex) {
 	for (var bytes = [], c = 0; c < hex.length; c += 2)
-		bytes.push(parseInt(hex.substr(c, 2), 16));
+	bytes.push(parseInt(hex.substr(c, 2), 16));
 	return bytes;
 }
 
@@ -51,7 +50,7 @@ function JSONToCSV(jsonArr) {
 		header.join(','), // header row first
 		...jsonArr.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','))
 	].join('\r\n')
-
+	
 	return (csv)
 }
 
@@ -78,6 +77,7 @@ const requestData = [
 ];
 
 // requestData[pageIndex-1] = 1;
+const recordsPerPage = 127;
 requestData[numRecordsIndex] = recordsPerPage;
 requestData[pageIndex] = 0;
 const secondsSinceEpoch = Math.round(Date.now() / 1000).toString(16);
@@ -218,7 +218,7 @@ async function updateGist(content, uploadStats) {
 		console.error(`Unable to get gist\n${error}`);
 	}
 
-	const filename = Object.keys(gist.data.files)[0];
+	const filename = 'GGST_replays.csv';
 
 	const files = {
 		[filename]: {
