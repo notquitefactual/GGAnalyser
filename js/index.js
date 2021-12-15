@@ -1,5 +1,7 @@
 const readable_character_names = ['sol', 'ky', 'may', 'axl', 'chipp', 'potemkin', 'faust', 'millia', 'zato', 'ramlethal', 'leo', 'nagoriyuki', 'giovanna', 'anji', 'i-no', 'goldlewis', 'jack-o', 'happy chaos']
-var floorStats
+var floorStats;
+
+var exportableMatchupTable;
 
 window.onload = async function () {
 
@@ -24,14 +26,21 @@ function processStats(rank) {
     const minDate = rankFilteredStats.minDate;
     const numberOfGames = rankFilteredStats.numberOfGames;
 
-    console.log(maxDate, minDate)
-    fineprint.innerText = `Data compiled from ${numberOfGames} matches gathered between ${minDate} and ${maxDate}`
+    fineprint.innerHTML = `<p> Data compiled from ${numberOfGames} matches gathered between ${minDate} and ${maxDate}</p>
+     <p onclick="exportMatchupData()"> <u> Click here to download the matchup table as a csv. </u><p>
+     <a href='https://gist.githubusercontent.com/notquitefactual/3c6a1d310025803d5ccdc2786e60ede8/raw/GGST_STATS.json'> Click here for ALL raw data</a>`
     let parent_width = document.getElementById('charUsagePie').parentElement.width;
     let parent_height = document.getElementById('charUsagePie').parentElement.height;
     const characterPlayRates = rankFilteredStats.playRateArray;
     const characterWinRates = rankFilteredStats.winRateArray;
     const characterWinRateErrors = rankFilteredStats.winrateErrorsArray;
     const matchupTable = rankFilteredStats.matchupTable;
+    exportableMatchupTable = JSON.parse(JSON.stringify(matchupTable));
+    for (let i = 0; i < exportableMatchupTable.length; i++) {
+        const characterData = exportableMatchupTable[i];
+        characterData.unshift(readable_character_names[i]);
+    }
+    exportableMatchupTable.unshift(readable_character_names);
     const matchupCounts = rankFilteredStats.matchupTableCounts;
     const matchupCertainties = rankFilteredStats.matchupTableCertainties;
 
@@ -163,4 +172,17 @@ function applySelectedFloors(event) {
     event.preventDefault();
     processStats(getSelectedFloor())
     return false
+}
+
+function exportMatchupData() {
+    let csvContent = "data:text/csv;charset=utf-8,"
+        + exportableMatchupTable.map(e => e.join(",")).join("\n");
+
+    let encodedUri = encodeURI(csvContent);
+    let link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "GGST_matchup_data.csv");
+    document.body.appendChild(link); // Required for FF
+
+    link.click();
 }
