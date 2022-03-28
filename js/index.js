@@ -1,4 +1,5 @@
-const readable_character_names = ['sol', 'ky', 'may', 'axl', 'chipp', 'potemkin', 'faust', 'millia', 'zato', 'ramlethal', 'leo', 'nagoriyuki', 'giovanna', 'anji', 'i-no', 'goldlewis', 'jack-o', 'happy chaos']
+var readable_character_names = ['sol', 'ky', 'may', 'axl', 'chipp', 'potemkin', 'faust', 'millia', 'zato', 'ramlethal', 'leo', 'nagoriyuki', 'giovanna', 'anji', 'i-no',
+    'goldlewis', 'jack-o', 'happy chaos', 'baiken', 'testament']
 var floorStats;
 
 var exportableMatchupTable;
@@ -40,6 +41,14 @@ function processStats(rank) {
         const characterData = exportableMatchupTable[i];
         characterData.unshift(readable_character_names[i]);
     }
+    const numChars = characterPlayRates.length;
+    if (numChars > readable_character_names.length) {
+        let unknownChars = Array(numChars - readable_character_names.length).fill('unknown DLC');
+        unknownChars = unknownChars.map( (x, index) => `${x}_${index}`)
+        readable_character_names = readable_character_names.concat(unknownChars);
+    }
+    console.log(numChars, numChars - readable_character_names.length, readable_character_names);
+
     exportableMatchupTable.unshift(readable_character_names);
     const matchupCounts = rankFilteredStats.matchupTableCounts;
     const matchupCertainties = rankFilteredStats.matchupTableCertainties;
@@ -104,9 +113,9 @@ function processStats(rank) {
         annotations: [],
     };
     const hoverText = []
-    for (var i = 0; i < readable_character_names.length; i++) {
+    for (var i = 0; i < characterPlayRates.length; i++) {
         const temp = [];
-        for (var j = 0; j < readable_character_names.length; j++) {
+        for (var j = 0; j < characterPlayRates.length; j++) {
             var currentValue = matchupTable[i][j];
             if (currentValue >= 0.8 || currentValue <= 0.2) {
                 var textColor = 'white';
@@ -116,8 +125,8 @@ function processStats(rank) {
             var result = {
                 xref: 'x1',
                 yref: 'y1',
-                x: readable_character_names[j],
-                y: readable_character_names[i],
+                x: readable_character_names[j] ? readable_character_names[j] : `char ${j}`,
+                y: readable_character_names[i] ? readable_character_names[i] : `char ${i}`,
                 confidence: (+matchupCertainties[i][j]).toFixed(2),
                 winrate: (+matchupTable[i][j]).toFixed(4),
                 gamecount: matchupCounts[i][j],
